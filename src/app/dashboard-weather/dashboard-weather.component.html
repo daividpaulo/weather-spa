@@ -1,1 +1,100 @@
-<p>dashboard-weather works!</p>
+
+<div class="row">
+  <div class="col-sm-12 col-md-12 col-lx-12">
+    <form>
+      <div class="form-row">
+        <div class="col-md-4 col-sm-12">
+          <label for="selectCapitals">Capital Brasileira</label>
+          <select class="form-control" id="selectCapitals">
+            <option>Recife</option>
+            <option>João Pessoa</option>
+          </select>
+        </div>
+        <div class="col-md-3 col-sm-12">
+          <label for="dataIni">Previsões de:</label>
+          <input type="date" class="form-control " />
+        </div>
+        <div class="col-md-3 col-sm-12">
+          <label for="dataFim">Até:</label>
+          <input type="date" class="form-control" />
+        </div>
+        <div class="col-md-2 col-sm-12">
+            <br/>
+            <button class="btn btn-dark btn-sm">Filter</button>
+        </div>
+      </div>
+    </form>
+
+  </div>
+
+</div>
+
+<hr/>
+
+<div class="row">
+
+  <div class=" col-xl-4 col-sm-12 col-md-4">
+    <div class="card text-center" style="width: 18rem;">
+      <div class="card-body">
+        <h5 class="card-title">Caruaru</h5>
+        <h6 class="card-subtitle mb-2 text-muted">Temperatura Atual</h6>
+        <span>37º</span>
+      </div>
+    </div>
+
+
+    <table class="table">
+      <tbody>
+        <tr>
+          <td>Velocidade do Vento</td>
+          <td>98</td>
+        </tr>
+        <tr>
+          <td>Pressão</td>
+          <td>1012</td>
+        </tr>
+        <tr>
+          <td>Humidade</td>
+          <td>81</td>
+        </tr>
+        </tbody>
+     </table>
+  </div>
+
+
+  <div class="col-xl-8 col-sm-12 col-md-8">
+    <div class="chart-wrapper">
+      <canvas baseChart
+          [datasets]="lineChartData"
+          [labels]="lineChartLabels"
+          [options]="lineChartOptions"
+          [legend]="lineChartLegend"
+          [chartType]="lineChartType"
+          [plugins]="lineChartPlugins">
+      </canvas>
+    </div>
+  </div>
+</div>
+
+<br/>
+<!--[colors]="lineChartColors"-->
+<div class="row">
+
+  <div class="col-sm-12 col-md-12  col-xl-12">
+    <div class="chart-wrapper">
+      <canvas baseChart
+          [datasets]="lineChartData"
+          [labels]="lineChartLabels"
+          [options]="lineChartOptions"
+
+          [legend]="lineChartLegend"
+          [chartType]="lineChartType"
+          [plugins]="lineChartPlugins">
+      </canvas>
+    </div>
+  </div>
+
+</div>
+
+
+

@@ -12,11 +12,11 @@ export class DashboartApiService{
   }
 
   getCurrentWeatherByNameCity(name: string):Observable<CityResponse>{
-    return this.http.get<CityResponse>(`${environment.baseUrl}/api/city/capitals`);
+    return this.http.get<CityResponse>(`${environment.baseUrl}/api/weather/current`);
   }
 
   getHistoryWeathById(id:number):Observable<CityResponse>{
-    return this.http.get<CityResponse>(`${environment.baseUrl}/api/city/capitals`);
+    return this.http.get<CityResponse>(`${environment.baseUrl}/api/weather/history`);
   }
 
   getCaptals(id: number): Observable<CityResponse> {

@@ -23,6 +23,7 @@ export class DashboardWeatherComponent implements OnInit {
 
     this.actRoute.data.subscribe(data => {
        this.cities = data.capitalsCities;
+       this.actualWeather = data.defaultWeather;
     })
 
 

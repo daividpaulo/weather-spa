@@ -8,6 +8,7 @@ import { ChartsModule } from 'ng2-charts';
 import { CityApiService } from './services/city-api.services';
 import { CityResolver } from './resolvers/city.resolver';
 import { HttpClientModule } from '@angular/common/http';
+import { WeatherResolver } from './resolvers/weather.resolver';
 
 
 @NgModule({
@@ -23,7 +24,7 @@ import { HttpClientModule } from '@angular/common/http';
     AppRoutingModule,
     ChartsModule
   ],
-  providers: [CityApiService,CityResolver],
+  providers: [CityResolver,WeatherResolver],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,14 +1,17 @@
 
 <div class="row">
   <div class="col-sm-12 col-md-12 col-lx-12">
-    <form>
+
       <div class="form-row">
         <div class="col-md-4 col-sm-12">
           <label for="selectCapitals">Capital Brasileira</label>
-          <select class="form-control" id="selectCapitals">
-            <option>Recife</option>
-            <option>João Pessoa</option>
+
+          <select class="form-control" id="selectCapitals"
+          [(ngModel)]="selectedCity"
+          (ngModelChange)="changeCity($event)" >
+            <option *ngFor="let item of cities" [ngValue]="item">{{item.name}} - {{item.state}}</option>
           </select>
+
         </div>
         <div class="col-md-3 col-sm-12">
           <label for="dataIni">Previsões de:</label>
@@ -23,7 +26,7 @@
             <button class="btn btn-dark btn-sm">Filter</button>
         </div>
       </div>
-    </form>
+
 
   </div>
 
@@ -36,9 +39,9 @@
   <div class=" col-xl-4 col-sm-12 col-md-4">
     <div class="card text-center" style="width: 18rem;">
       <div class="card-body">
-        <h5 class="card-title">Caruaru</h5>
+        <h5 class="card-title">{{ actualWeather.nameCity }}</h5>
         <h6 class="card-subtitle mb-2 text-muted">Temperatura Atual</h6>
-        <span>37º</span>
+        <span><h2>{{ actualWeather.temp }}º</h2></span>
       </div>
     </div>
 
@@ -46,16 +49,24 @@
     <table class="table">
       <tbody>
         <tr>
-          <td>Velocidade do Vento</td>
-          <td>98</td>
+          <td>Speed Wind</td>
+          <td>{{ actualWeather.speedWind }}</td>
         </tr>
         <tr>
-          <td>Pressão</td>
-          <td>1012</td>
+          <td>Pressure</td>
+          <td>{{ actualWeather.pressure }}</td>
         </tr>
         <tr>
-          <td>Humidade</td>
-          <td>81</td>
+          <td>Humidity</td>
+          <td>{{ actualWeather.humidity }}</td>
+        </tr>
+        <tr>
+          <td>Clouds</td>
+          <td>{{ actualWeather.cloudsPercent }}%</td>
+        </tr>
+        <tr>
+          <td>Weather</td>
+          <td>{{ actualWeather.weatherDescription }}%</td>
         </tr>
         </tbody>
      </table>

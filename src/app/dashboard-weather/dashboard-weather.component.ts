@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ChartDataSets, ChartOptions } from 'chart.js';
 import { Color, Label } from 'ng2-charts';
+import {  ActivatedRoute } from '@angular/router';
+import { CityResponse } from '../domains-types/city-types';
+import { WeatherApiService } from '../services/weather-api.services';
+import { WeatherResponse } from '../domains-types/weather-types';
+import { stringify } from 'querystring';
 
 @Component({
   selector: 'app-dashboard-weather',
@@ -9,9 +14,41 @@ import { Color, Label } from 'ng2-charts';
 })
 export class DashboardWeatherComponent implements OnInit {
 
-  constructor() { }
+  cities: CityResponse[] = [];
+  selectedCity: CityResponse;
+  actualWeather: WeatherResponse;
+
+  constructor(private actRoute:ActivatedRoute,
+              private weatherApiService:WeatherApiService) {
+
+    this.actRoute.data.subscribe(data => {
+       this.cities = data.capitalsCities;
+    })
+
+
+  }
 
   ngOnInit(): void {
+
+  }
+
+  changeCity(newSelectedCity){
+     this.loadCurrentWeather(newSelectedCity);
+  }
+
+
+  loadCurrentWeather(city){
+
+    this.actualWeather = null;
+    if(!city || !city.name ||  city.name == "" ) return null;
+
+    this.weatherApiService.getCurrentWeather(city.name, city.country).subscribe(res=>{
+
+       if(!res) return null;
+
+       this.actualWeather = res;
+
+    });
 
   }
 

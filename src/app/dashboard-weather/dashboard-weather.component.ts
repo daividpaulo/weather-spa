@@ -65,6 +65,7 @@ acticveCountDown(minutes){
 
 changeCity(newSelectedCity){
    this.loadCurrentWeather(newSelectedCity);
+   this.loadHistoryWeather(this.selectedCity.idCity);
 }
 
 

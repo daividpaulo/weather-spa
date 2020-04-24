@@ -5,7 +5,10 @@ import {  ActivatedRoute } from '@angular/router';
 import { CityResponse } from '../domains-types/city-types';
 import { WeatherApiService } from '../services/weather-api.services';
 import { WeatherResponse } from '../domains-types/weather-types';
-import { stringify } from 'querystring';
+import { Observable, timer, of,interval } from 'rxjs';
+import { map, takeWhile, take } from "rxjs/operators";
+import { NgxSpinnerService } from 'ngx-spinner';
+
 
 @Component({
   selector: 'app-dashboard-weather',
@@ -15,66 +18,136 @@ import { stringify } from 'querystring';
 export class DashboardWeatherComponent implements OnInit {
 
   cities: CityResponse[] = [];
+  hourlyWeather: WeatherResponse[] = [];
   selectedCity: CityResponse;
   actualWeather: WeatherResponse;
+  diplay = "";
 
-  constructor(private actRoute:ActivatedRoute,
-              private weatherApiService:WeatherApiService) {
+  lineChartData: ChartDataSets[] = [];
+  lineChartLabels: Label[] = [];
+  lineChartOptions = {responsive: true};
+  lineChartColors: Color[] = [];
+  lineChartLegend = true;
+  lineChartPlugins = [];
+  lineChartType = 'line';
 
-    this.actRoute.data.subscribe(data => {
+constructor(private actRoute:ActivatedRoute,
+              private weatherApiService:WeatherApiService,
+              private spinner: NgxSpinnerService) {
+
+       this.actRoute.data.subscribe(data => {
        this.cities = data.capitalsCities;
        this.actualWeather = data.defaultWeather;
+       this.selectedCity = this.cities.find(x=>{return x.idCity==this.actualWeather.city.idCity});
+       this.loadHistoryWeather(this.selectedCity.idCity);
     })
+}
 
 
-  }
 
-  ngOnInit(): void {
-
-  }
-
-  changeCity(newSelectedCity){
-     this.loadCurrentWeather(newSelectedCity);
-  }
+ngOnInit(): void {
+  this.acticveCountDown(15);
+}
 
 
-  loadCurrentWeather(city){
+acticveCountDown(minutes){
+  this.countdown(minutes).subscribe(next => {
 
-    this.actualWeather = null;
+    if(next.minutes<=0 && next.seconds<=0) {
+         this.loadCurrentWeather(this.selectedCity);
+         this.loadHistoryWeather(this.selectedCity.idCity);
+         this.acticveCountDown(minutes);
+    }
+    this.diplay = next.display;
+  });
+}
+
+
+changeCity(newSelectedCity){
+   this.loadCurrentWeather(newSelectedCity);
+}
+
+
+loadHistoryWeather(idCity){
+
+  if(!idCity || idCity<=0) return null;
+  this.spinner.show();
+
+  this.weatherApiService.getHourlyToDayWeather(idCity).subscribe(res=>{
+    if(!res) return null;
+    this.hourlyWeather = res;
+    this.updateGraph();
+    this.spinner.hide();
+  });
+
+}
+
+loadCurrentWeather(city){
+
     if(!city || !city.name ||  city.name == "" ) return null;
 
+    this.spinner.show();
+
     this.weatherApiService.getCurrentWeather(city.name, city.country).subscribe(res=>{
-
        if(!res) return null;
-
        this.actualWeather = res;
-
+       this.spinner.hide();
     });
 
-  }
+}
 
-  lineChartData: ChartDataSets[] = [
-    { data: [85, 72, 78, 75, 77, 75], label: 'Temp' },
-    { data: [90, 82, 88, 85, 87, 85], label: 'Temp Max' },
-    { data: [60, 62, 68, 65, 67, 65], label: 'Temp Min' },
-  ];
 
-  lineChartLabels: Label[] = ['30/03/2020', '31/03/2020', '01/04/2020', '02/04/2020', '03/04/2020', '04/04/2020'];
+ countdown(minutes: number, delay: number = 0) {
+   return new Observable<{ display: string; minutes: number; seconds: number }>(
+      subscriber => {
+        timer(delay, 1000)
+          .pipe(take(minutes * 60))
+          .pipe(map(v => minutes * 60 - 1 - v))
+          .pipe(takeWhile(x => x >= 0))
+          .subscribe(countdown => { // countdown => seconds
+            const minutes = Math.floor(countdown / 60);
+            const seconds = countdown - minutes * 60;
 
-  lineChartOptions = {
-    responsive: true,
-  };
+            subscriber.next({
+              display: `${("0" + minutes.toString()).slice(-2)}:${("0" + seconds.toString()).slice(-2)}`,
+              minutes,
+              seconds
+            });
 
-  /*lineChartColors: Color[] = [
-    {
-      borderColor: 'black',
-     // backgroundColor: 'white' //'rgba(255,255,0,0.28)',
-     }
-   ];*/
+            if (seconds <= 0 && minutes <= 0) {
+              subscriber.complete();
+            }
+       });
+   });
+}
 
-   lineChartLegend = true;
-   lineChartPlugins = [];
-   lineChartType = 'line';
+
+updateGraph(){
+
+  var valuesGraph = [];
+  var newLabels : Label[] = [];
+
+  this.hourlyWeather.forEach(i=>{
+     valuesGraph.push(i.temp);
+     var itemDate = new Date(i.data);
+     newLabels.push(this.getTimeString(itemDate));
+  });
+
+  this.lineChartLabels = newLabels;
+  this.lineChartData = [{ data: valuesGraph, label: 'Temperature ºC' }];
+
+}
+
+getTimeString(itemDate){
+
+  var hours    = itemDate.getHours() <= 9 ? "0" + itemDate.getHours() : itemDate.getHours() ;
+  var minutes  = itemDate.getMinutes() <= 9 ? "0" + itemDate.getMinutes() : itemDate.getMinutes() ;
+
+  return hours + ":" + minutes ;
+
+}
+
+
 
 
 }

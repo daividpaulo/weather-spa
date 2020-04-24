@@ -1,6 +1,8 @@
+import { CityResponse } from './city-types';
+
 export interface WeatherResponse{
   data: Date,
-  idCityApi: number,
+  city: CityResponse,
   nameCity: string
   cloudsPercent: number,
   weatherDescription: string,

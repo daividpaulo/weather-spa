@@ -4,27 +4,25 @@
 
       <div class="form-row">
         <div class="col-md-4 col-sm-12">
-          <label for="selectCapitals">Capital Brasileira</label>
+          <label for="selectCapitals">Capitais Brasileiras</label>
 
           <select class="form-control" id="selectCapitals"
-          [(ngModel)]="selectedCity"
-          (ngModelChange)="changeCity($event)" >
+            [(ngModel)]="selectedCity"
+            (ngModelChange)="changeCity($event)"
+          >
             <option *ngFor="let item of cities" [ngValue]="item">{{item.name}} - {{item.state}}</option>
           </select>
 
         </div>
-        <div class="col-md-3 col-sm-12">
+        <!--<div class="col-md-3 col-sm-12">
           <label for="dataIni">Previsões de:</label>
           <input type="date" class="form-control " />
         </div>
         <div class="col-md-3 col-sm-12">
           <label for="dataFim">Até:</label>
           <input type="date" class="form-control" />
-        </div>
-        <div class="col-md-2 col-sm-12">
-            <br/>
-            <button class="btn btn-dark btn-sm">Filter</button>
-        </div>
+        </div>-->
+
       </div>
 
 
@@ -40,8 +38,13 @@
     <div class="card text-center" style="width: 18rem;">
       <div class="card-body">
         <h5 class="card-title">{{ actualWeather.nameCity }}</h5>
-        <h6 class="card-subtitle mb-2 text-muted">Temperatura Atual</h6>
+        <h6 class="card-subtitle mb-2 text-muted">
+          Current temperature
+        </h6>
         <span><h2>{{ actualWeather.temp }}º</h2></span>
+        <span class="badge badge-info"><h6>{{ actualWeather.data | date :'dd/MM/yyyy hh:mm:ss'}}</h6></span>
+        <br/>
+        <span>research in <strong>{{diplay}}</strong></span>
       </div>
     </div>
 
@@ -66,7 +69,7 @@
         </tr>
         <tr>
           <td>Weather</td>
-          <td>{{ actualWeather.weatherDescription }}%</td>
+          <td>{{ actualWeather.weatherDescription }}</td>
         </tr>
         </tbody>
      </table>
@@ -91,19 +94,6 @@
 <!--[colors]="lineChartColors"-->
 <div class="row">
 
-  <div class="col-sm-12 col-md-12  col-xl-12">
-    <div class="chart-wrapper">
-      <canvas baseChart
-          [datasets]="lineChartData"
-          [labels]="lineChartLabels"
-          [options]="lineChartOptions"
-
-          [legend]="lineChartLegend"
-          [chartType]="lineChartType"
-          [plugins]="lineChartPlugins">
-      </canvas>
-    </div>
-  </div>
 
 </div>
 

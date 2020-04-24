@@ -1,6 +1,6 @@
 
 export interface CityResponse {
-   id: number,
+   idCity: number,
    name: string,
    country: string,
    state: string,

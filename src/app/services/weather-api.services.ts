@@ -16,5 +16,9 @@ export class WeatherApiService{
            (`${environment.baseUrl}/api/weather/current?cityName=`+cityName+'&countryAcronym='+ countryAcronym);
   }
 
+  getHourlyToDayWeather(idCity:number): Observable<WeatherResponse[]>{
+    return this.http.get<WeatherResponse[]>
+           (`${environment.baseUrl}/api/weather/history?idCity=`+ idCity);
+  }
 
 }
